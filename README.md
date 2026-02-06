@@ -1,0 +1,2 @@
+# gpa-calculator
+for 4.3 scale format gpa user, can create different majors options to calculate cgpa for decision making, also have the wes function for usa master applicant
