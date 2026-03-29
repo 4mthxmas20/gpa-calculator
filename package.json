@@ -1,0 +1,8 @@
+{
+  "name": "gpa-calculator",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix react-app run dev",
+    "build": "npm --prefix react-app run build"
+  }
+}
