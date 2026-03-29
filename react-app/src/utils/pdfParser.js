@@ -1,25 +1,19 @@
-/**
- * Lazy-load pdfjs-dist only when needed (keeps main bundle small)
- */
-async function getPdfJs() {
-  const pdfjsLib = await import('pdfjs-dist');
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  return pdfjsLib;
-}
+import * as pdfjsLib from 'pdfjs-dist';
+// Import worker as a URL so Vite bundles it locally (no CDN dependency)
+import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;
 
 /**
  * Extract all text lines from a PDF ArrayBuffer
  */
 export async function extractTextFromPDF(arrayBuffer) {
-  const pdfjsLib = await getPdfJs();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const allLines = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const lines = groupByLines(content.items);
-    allLines.push(...lines);
+    allLines.push(...groupByLines(content.items));
   }
   return allLines;
 }
@@ -53,7 +47,7 @@ const CREDIT_RE    = /\b(\d(?:\.\d)?)\b/;
 const CODE_RE      = /\b([A-Z]{2,5}\d{4}[A-Z]?)\b/;
 
 /**
- * Parse extracted text lines into course candidates.
+ * Parse extracted lines into course candidates.
  * Returns: [{ name, credit, grade, confidence, raw }]
  */
 export function parseCourses(lines) {
@@ -71,7 +65,6 @@ export function parseCourses(lines) {
 
     const codeMatch = line.match(CODE_RE);
 
-    // Strip code, grade, credit tokens to get the course name
     let name = line
       .replace(CODE_RE, '')
       .replace(new RegExp(`\\b${escapeRe(grade)}\\b`), '')
