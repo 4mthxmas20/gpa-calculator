@@ -7,12 +7,14 @@ const COLOR_PALETTE = [
   '#a6192e', '#1d4ed8', '#059669', '#d97706', '#7c3aed', '#db2777', '#0891b2', '#65a30d',
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onNavigate }) {
   const { projects, activeProjectId, view, setActiveProject, addProject, deleteProject, renameProject, setProjectColor, setView, saveData, loadData } = useStore();
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [showColorPicker, setShowColorPicker] = useState(null);
+
+  const navigate = (fn) => { fn(); onNavigate?.(); };
 
   const handleAdd = () => {
     const name = newName.trim() || `Option ${projects.length + 1}`;
@@ -64,7 +66,7 @@ export default function Sidebar() {
         ].map(({ id, label, icon }) => (
           <button
             key={id}
-            onClick={() => setView(id)}
+            onClick={() => navigate(() => setView(id))}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
               view === id
                 ? 'bg-red-50 text-red-700'
@@ -98,7 +100,7 @@ export default function Sidebar() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => { setActiveProject(p.id); if (view === 'compare' || view === 'wes') return; setView('editor'); }}
+                    onClick={() => navigate(() => { setActiveProject(p.id); if (view === 'compare' || view === 'wes') return; setView('editor'); })}
                     className={`w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors ${
                       activeProjectId === p.id
                         ? 'bg-slate-100'
