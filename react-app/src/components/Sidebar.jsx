@@ -8,7 +8,7 @@ const COLOR_PALETTE = [
 ];
 
 export default function Sidebar() {
-  const { projects, activeProjectId, view, setActiveProject, addProject, deleteProject, renameProject, setProjectColor, setView, exportData, importData } = useStore();
+  const { projects, activeProjectId, view, setActiveProject, addProject, deleteProject, renameProject, setProjectColor, setView, saveData, loadData } = useStore();
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
@@ -25,7 +25,7 @@ export default function Sidebar() {
     setEditingId(null);
   };
 
-  const handleImport = () => {
+  const handleLoad = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -34,7 +34,7 @@ export default function Sidebar() {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const ok = importData(ev.target.result);
+        const ok = loadData(ev.target.result);
         if (!ok) alert('Invalid file format');
       };
       reader.readAsText(file);
@@ -170,20 +170,26 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Data actions */}
-      <div className="px-3 py-3 border-t border-slate-200 flex flex-col gap-2">
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-1 mb-1">Data</div>
+      {/* Save / Load */}
+      <div className="px-3 py-4 border-t border-slate-200 flex flex-col gap-2">
+        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-1 mb-1">
+          Your Data
+        </div>
+        <p className="text-xs text-slate-400 px-1 leading-relaxed mb-1">
+          Data is <b className="text-slate-500">not saved automatically</b>. Save a file to keep your work.
+        </p>
         <button
-          onClick={exportData}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+          onClick={saveData}
+          className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-white rounded-xl transition-colors"
+          style={{ background: '#a6192e' }}
         >
-          <span>⬇️</span> Export JSON
+          <span>💾</span> Save Data
         </button>
         <button
-          onClick={handleImport}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+          onClick={handleLoad}
+          className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
         >
-          <span>⬆️</span> Import JSON
+          <span>📂</span> Load Data
         </button>
       </div>
     </aside>
