@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { extractTextFromPDF, parseCourses } from '../utils/pdfParser';
 import { GRADE_LIST, POLYU_GRADES, GRADE_COLORS } from '../utils/gpa';
 import useStore from '../store/useStore';
@@ -12,7 +12,6 @@ export default function PDFImport({ project, semesterId, onClose }) {
   const [error, setError] = useState('');
   const [courses, setCourses] = useState([]);
   const [selected, setSelected] = useState(new Set());
-  const fileRef = useRef();
 
   const isPDFFile = (file) => {
     if (!file) return false;
@@ -120,12 +119,11 @@ export default function PDFImport({ project, semesterId, onClose }) {
           {/* ── Step 0: Drop zone ── */}
           {step === STEPS.idle && (
             <div className="flex flex-col gap-4">
-              <label
-                htmlFor="pdf-import-input"
+              <div
                 onDragOver={e => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={() => setDragging(false)}
                 onDrop={onDrop}
-                className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all ${
+                className={`relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all ${
                   dragging
                     ? 'border-red-500 bg-red-50 scale-[1.01]'
                     : 'border-slate-300 hover:border-red-400 hover:bg-slate-50'
@@ -137,13 +135,12 @@ export default function PDFImport({ project, semesterId, onClose }) {
                 <div className="text-xs text-slate-300 mt-4">Works with PolyU e-transcripts and other text-based PDFs</div>
                 <input
                   id="pdf-import-input"
-                  ref={fileRef}
                   type="file"
                   accept="application/pdf,.pdf"
-                  className="sr-only"
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   onChange={onFileChange}
                 />
-              </label>
+              </div>
 
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 flex gap-2">
