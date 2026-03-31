@@ -13,6 +13,16 @@ It helps you:
 Live site:
 [https://4mthxmas20.github.io/gpa-calculator/](https://4mthxmas20.github.io/gpa-calculator/)
 
+## Preview
+
+### Desktop
+
+![Desktop overview](docs/images/desktop-overview.jpeg)
+
+### Mobile
+
+![Mobile overview](docs/images/mobile-overview.png)
+
 ## Features
 
 ### 1. Course Editor
