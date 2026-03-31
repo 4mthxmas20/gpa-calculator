@@ -8,13 +8,17 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;
  * Extract all text lines from a PDF ArrayBuffer
  */
 export async function extractTextFromPDF(arrayBuffer) {
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  // pdfjs-dist 5 expects binary data as Uint8Array in the browser.
+  const data = arrayBuffer instanceof Uint8Array ? arrayBuffer : new Uint8Array(arrayBuffer);
+  const pdf = await pdfjsLib.getDocument({ data }).promise;
   const allLines = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     allLines.push(...groupByLines(content.items));
+    page.cleanup();
   }
+  pdf.destroy();
   return allLines;
 }
 
@@ -33,8 +37,9 @@ function groupByLines(items) {
     .map(([, items]) =>
       items
         .sort((a, b) => a.transform[4] - b.transform[4])
-        .map(i => i.str)
+        .map(i => normalizeExtractedText(i.str))
         .join(' ')
+        .replace(/\s+/g, ' ')
         .trim()
     )
     .filter(line => line.length > 0);
@@ -42,7 +47,6 @@ function groupByLines(items) {
 
 // ─── Parsing constants ────────────────────────────────────────────────────────
 const VALID_GRADES = new Set(['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','F']);
-const GRADE_RE     = /\b(A\+|A-|A|B\+|B-|B|C\+|C-|C|D\+|D|F)\b/;
 const CREDIT_RE    = /\b(\d(?:\.\d)?)\b/;
 const CODE_RE      = /\b([A-Z]{2,5}\d{4}[A-Z]?)\b/;
 
@@ -53,28 +57,33 @@ const CODE_RE      = /\b([A-Z]{2,5}\d{4}[A-Z]?)\b/;
 export function parseCourses(lines) {
   const results = [];
 
-  for (const line of lines) {
-    const gradeMatch  = line.match(GRADE_RE);
+  for (const rawLine of lines) {
+    const line = normalizeExtractedText(rawLine);
     const creditMatch = line.match(CREDIT_RE);
-    if (!gradeMatch || !creditMatch) continue;
+    if (!creditMatch) continue;
 
-    const grade  = gradeMatch[1];
+    const grade = extractGrade(line, creditMatch.index + creditMatch[0].length);
+    if (!grade) continue;
+
     const credit = parseFloat(creditMatch[1]);
     if (!VALID_GRADES.has(grade)) continue;
     if (credit < 0.5 || credit > 12) continue;
 
     const codeMatch = line.match(CODE_RE);
 
-    let name = line
+    let name = cleanCourseName(line)
       .replace(CODE_RE, '')
-      .replace(new RegExp(`\\b${escapeRe(grade)}\\b`), '')
+      .replace(buildGradeRemovalRe(grade), ' ')
       .replace(CREDIT_RE, '')
       .replace(/\s{2,}/g, ' ')
       .replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9)]+$/g, '')
       .trim();
 
-    if (codeMatch) name = `${codeMatch[1]} ${name}`.trim();
-    if (!name)     name = codeMatch ? codeMatch[1] : 'Unknown Course';
+    if (codeMatch) {
+      name = `${codeMatch[1]} ${name}`.trim();
+    } else if (!name) {
+      name = 'Unknown Course';
+    }
 
     results.push({ name, credit, grade, confidence: codeMatch ? 'high' : 'medium', raw: line });
   }
@@ -91,4 +100,79 @@ export function parseCourses(lines) {
 
 function escapeRe(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function extractGrade(text, startIndex = 0) {
+  const preferredText = text.slice(startIndex);
+  const gradeFromTail = extractGradeFromTokens(preferredText);
+  if (gradeFromTail) return gradeFromTail;
+  return extractGradeFromTokens(text);
+}
+
+function extractGradeFromTokens(text) {
+  const tokens = text
+    .replace(/([+-])/g, ' $1 ')
+    .split(/\s+/)
+    .map(token => token.replace(/^[^A-Z0-9+-]+|[^A-Z0-9+-]+$/gi, ''))
+    .filter(Boolean);
+
+  for (let i = 0; i < tokens.length; i++) {
+    const current = tokens[i].toUpperCase();
+    const next = tokens[i + 1]?.toUpperCase();
+
+    if (/^[ABCD]$/.test(current) && (next === '+' || next === '-')) {
+      return `${current}${next}`;
+    }
+
+    if (current === 'F') {
+      return current;
+    }
+
+    if (VALID_GRADES.has(current)) {
+      return current;
+    }
+  }
+
+  return null;
+}
+
+function buildGradeRemovalRe(grade) {
+  const letter = grade[0];
+  const sign = grade[1];
+
+  if (!sign) {
+    return new RegExp(`(^|[^A-Z0-9])${escapeRe(letter)}(?=$|[^A-Z0-9])`, 'i');
+  }
+
+  return new RegExp(`(^|[^A-Z0-9])${escapeRe(letter)}\\s*${escapeRe(sign)}(?=$|[^A-Z0-9])`, 'i');
+}
+
+function normalizeExtractedText(text = '') {
+  return text
+    .normalize('NFKC')
+    .replace(/\uE088/g, '-')
+    .replace(/\uE09D/g, '+')
+    .split('')
+    .filter(char => {
+      const code = char.charCodeAt(0);
+      return !(
+        code <= 31 ||
+        (code >= 127 && code <= 159) ||
+        (code >= 8203 && code <= 8205) ||
+        (code >= 57344 && code <= 63743) ||
+        code === 65279 ||
+        code === 65533
+      );
+    })
+    .join('')
+    .replace(/[−–—]/g, '-')
+    .replace(/(^|[^A-Z0-9])([A-DF])\s*([+-])(?=$|[^A-Z0-9])/gi, '$1$2$3')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanCourseName(text) {
+  return normalizeExtractedText(text)
+    .replace(/[|¦•·]/g, ' ')
+    .replace(/\s+/g, ' ');
 }

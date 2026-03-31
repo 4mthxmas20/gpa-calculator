@@ -1,5 +1,5 @@
 import useStore from '../store/useStore';
-import { calcProjectGPA, POLYU_GRADES, WES_GRADES, wesLabel, admissionHint } from '../utils/gpa';
+import { calcProjectGPA, POLYU_GRADES, WES_GRADES, wesLabel } from '../utils/gpa';
 
 const US_SCHOOLS = [
   { name: 'MIT', minWES: 3.8, program: 'Graduate Engineering' },
@@ -17,8 +17,6 @@ const US_SCHOOLS = [
 function ProjectWESCard({ project }) {
   const { gpa: polyuGPA, totalCredits } = calcProjectGPA(project.semesters, POLYU_GRADES);
   const { gpa: wesGPA } = calcProjectGPA(project.semesters, WES_GRADES);
-  const hint = admissionHint(wesGPA);
-
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5">
       <div className="flex items-center gap-2 mb-4">

@@ -11,12 +11,18 @@ export default function PDFImport({ project, semesterId, onClose }) {
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState('');
   const [courses, setCourses] = useState([]);
+  const [rawLines, setRawLines] = useState([]);
   const [selected, setSelected] = useState(new Set());
   const fileRef = useRef();
 
+  const isPDFFile = (file) => {
+    if (!file) return false;
+    return file.type === 'application/pdf' || file.name?.toLowerCase().endsWith('.pdf');
+  };
+
   // ── File handling ─────────────────────────────────────────────────────────
   const processFile = useCallback(async (file) => {
-    if (!file || file.type !== 'application/pdf') {
+    if (!isPDFFile(file)) {
       setError('Please upload a valid PDF file.');
       return;
     }
@@ -25,6 +31,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
     try {
       const buffer = await file.arrayBuffer();
       const lines = await extractTextFromPDF(buffer);
+      setRawLines(lines);
       const parsed = parseCourses(lines);
       if (!parsed.length) {
         setError('No courses detected. The PDF may be scanned (image-based) or in an unsupported format.');
@@ -225,6 +232,22 @@ export default function PDFImport({ project, semesterId, onClose }) {
               <p className="text-xs text-slate-400">
                 ✏️ You can edit any field before importing. Deselect rows you don't want.
               </p>
+
+              <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4">
+                <div className="text-xs font-semibold uppercase tracking-wider text-amber-700 mb-2">
+                  Debug Extracted Lines
+                </div>
+                <p className="text-xs text-amber-800 mb-3">
+                  Use this to check how the PDF text was extracted. If grades still look wrong, send me one of the raw lines below.
+                </p>
+                <div className="max-h-56 overflow-y-auto rounded-xl bg-white border border-amber-100 divide-y divide-amber-100">
+                  {rawLines.map((line, idx) => (
+                    <div key={`${idx}-${line}`} className="px-3 py-2 text-xs font-mono text-slate-700 break-words">
+                      {line}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
@@ -246,7 +269,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => { setStep(STEPS.idle); setCourses([]); setSelected(new Set()); }}
+                onClick={() => { setStep(STEPS.idle); setCourses([]); setRawLines([]); setSelected(new Set()); }}
                 className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-xl transition-colors font-medium"
               >← Re-upload</button>
               <button

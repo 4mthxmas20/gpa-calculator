@@ -36,8 +36,6 @@ export default function CompareView() {
 
   const sorted = [...data].sort((a, b) => b.polyuGPA - a.polyuGPA);
 
-  const maxPolyuGPA = Math.max(...data.map(d => d.polyuGPA), 0.01);
-  const maxWesGPA = Math.max(...data.map(d => d.wesGPA), 0.01);
   const maxCredits = Math.max(...data.map(d => d.totalCredits), 1);
 
   return (
