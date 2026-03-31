@@ -11,7 +11,6 @@ export default function PDFImport({ project, semesterId, onClose }) {
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState('');
   const [courses, setCourses] = useState([]);
-  const [rawLines, setRawLines] = useState([]);
   const [selected, setSelected] = useState(new Set());
   const fileRef = useRef();
 
@@ -31,7 +30,6 @@ export default function PDFImport({ project, semesterId, onClose }) {
     try {
       const buffer = await file.arrayBuffer();
       const lines = await extractTextFromPDF(buffer);
-      setRawLines(lines);
       const parsed = parseCourses(lines);
       if (!parsed.length) {
         setError('No courses detected. The PDF may be scanned (image-based) or in an unsupported format.');
@@ -47,7 +45,10 @@ export default function PDFImport({ project, semesterId, onClose }) {
     }
   }, []);
 
-  const onFileChange = (e) => processFile(e.target.files[0]);
+  const onFileChange = (e) => {
+    processFile(e.target.files[0]);
+    e.target.value = '';
+  };
   const onDrop = (e) => {
     e.preventDefault();
     setDragging(false);
@@ -119,11 +120,11 @@ export default function PDFImport({ project, semesterId, onClose }) {
           {/* ── Step 0: Drop zone ── */}
           {step === STEPS.idle && (
             <div className="flex flex-col gap-4">
-              <div
+              <label
+                htmlFor="pdf-import-input"
                 onDragOver={e => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={() => setDragging(false)}
                 onDrop={onDrop}
-                onClick={() => fileRef.current.click()}
                 className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all ${
                   dragging
                     ? 'border-red-500 bg-red-50 scale-[1.01]'
@@ -132,10 +133,17 @@ export default function PDFImport({ project, semesterId, onClose }) {
               >
                 <div className="text-5xl mb-3 select-none">📄</div>
                 <div className="font-semibold text-slate-700 text-base">Drop your transcript PDF here</div>
-                <div className="text-sm text-slate-400 mt-1">or click to browse files</div>
+                <div className="text-sm text-slate-400 mt-1">or tap to browse files</div>
                 <div className="text-xs text-slate-300 mt-4">Works with PolyU e-transcripts and other text-based PDFs</div>
-                <input ref={fileRef} type="file" accept=".pdf" className="hidden" onChange={onFileChange} />
-              </div>
+                <input
+                  id="pdf-import-input"
+                  ref={fileRef}
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="sr-only"
+                  onChange={onFileChange}
+                />
+              </label>
 
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 flex gap-2">
@@ -232,22 +240,6 @@ export default function PDFImport({ project, semesterId, onClose }) {
               <p className="text-xs text-slate-400">
                 ✏️ You can edit any field before importing. Deselect rows you don't want.
               </p>
-
-              <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4">
-                <div className="text-xs font-semibold uppercase tracking-wider text-amber-700 mb-2">
-                  Debug Extracted Lines
-                </div>
-                <p className="text-xs text-amber-800 mb-3">
-                  Use this to check how the PDF text was extracted. If grades still look wrong, send me one of the raw lines below.
-                </p>
-                <div className="max-h-56 overflow-y-auto rounded-xl bg-white border border-amber-100 divide-y divide-amber-100">
-                  {rawLines.map((line, idx) => (
-                    <div key={`${idx}-${line}`} className="px-3 py-2 text-xs font-mono text-slate-700 break-words">
-                      {line}
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
 
@@ -269,7 +261,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => { setStep(STEPS.idle); setCourses([]); setRawLines([]); setSelected(new Set()); }}
+                onClick={() => { setStep(STEPS.idle); setCourses([]); setSelected(new Set()); }}
                 className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-xl transition-colors font-medium"
               >← Re-upload</button>
               <button

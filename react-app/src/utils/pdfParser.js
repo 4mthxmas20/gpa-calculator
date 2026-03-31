@@ -10,7 +10,13 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;
 export async function extractTextFromPDF(arrayBuffer) {
   // pdfjs-dist 5 expects binary data as Uint8Array in the browser.
   const data = arrayBuffer instanceof Uint8Array ? arrayBuffer : new Uint8Array(arrayBuffer);
-  const pdf = await pdfjsLib.getDocument({ data }).promise;
+  let pdf;
+  try {
+    pdf = await pdfjsLib.getDocument({ data }).promise;
+  } catch {
+    // Some mobile browsers are less reliable with the worker path; retry without it.
+    pdf = await pdfjsLib.getDocument({ data, disableWorker: true }).promise;
+  }
   const allLines = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
