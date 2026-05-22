@@ -77,6 +77,10 @@ export default function App() {
           {view === 'editor'  && <EditorView />}
           {view === 'compare' && <CompareView />}
           {view === 'target'  && <TargetView />}
+
+          <footer className="mt-auto px-6 py-3 text-center text-xs text-slate-400 border-t border-slate-200 bg-white/50">
+            For reference only — please verify with your official transcript.
+          </footer>
         </main>
       </div>
     </div>
