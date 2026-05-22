@@ -91,3 +91,84 @@ export function admissionHint(gpa) {
   if (gpa >= 2.7) return { label: 'Borderline', color: '#d97706' };
   return { label: 'Challenging', color: '#dc2626' };
 }
+
+// ─── Target GPA ────────────────────────────────────────────────────────────
+// Reverse-solve: given totalCredits, completedCredits, currentGPA and targetGPA,
+// what average GPA must the remaining credits earn?
+export function calcRequiredGPA({ totalCredits, completedCredits, currentGPA, targetGPA }) {
+  const remaining = totalCredits - completedCredits;
+  if (remaining <= 0) return { remaining, required: null, error: 'no_remaining' };
+  const totalNeeded = targetGPA * totalCredits;
+  const earned = currentGPA * completedCredits;
+  const required = (totalNeeded - earned) / remaining;
+  return { remaining, required };
+}
+
+// Feasibility tier on PolyU 4.3 scale
+export function feasibilityTier(required) {
+  if (required === null || Number.isNaN(required)) return null;
+  if (required <= 0)   return { label: 'Already Achieved', color: '#16a34a', icon: '✅' };
+  if (required <= 2.0) return { label: 'Easy',             color: '#16a34a', icon: '😎' };
+  if (required <= 3.0) return { label: 'Moderate',         color: '#2563eb', icon: '🙂' };
+  if (required <= 3.5) return { label: 'Challenging',      color: '#d97706', icon: '😐' };
+  if (required <= 4.0) return { label: 'Very Hard',        color: '#dc2626', icon: '😬' };
+  if (required <= 4.3) return { label: 'Extreme',          color: '#7f1d1d', icon: '🔥' };
+  return                       { label: 'Impossible',      color: '#000000', icon: '❌' };
+}
+
+// Closest letter grade ≥ required (or 'F' floor when required <= 0)
+export function nearestGradeAbove(required) {
+  if (required <= 0) return 'F';
+  const sorted = Object.entries(POLYU_GRADES).sort((a, b) => a[1] - b[1]); // F → A+
+  for (const [grade, pts] of sorted) {
+    if (pts >= required) return grade;
+  }
+  return null; // > 4.3
+}
+
+// Build 1-3 concrete grade plans for the remaining credits.
+// Returns array of { type: 'single' | 'mix', desc: string }
+export function gradePlanSuggestions(required, remaining) {
+  if (required === null || Number.isNaN(required) || remaining <= 0) return [];
+  if (required <= 0) return [{ type: 'single', desc: 'Any grade works — target already locked in.' }];
+  if (required > 4.3) return [];
+
+  const plans = [];
+  const entries = Object.entries(POLYU_GRADES).sort((a, b) => b[1] - a[1]); // A+ → F
+
+  // ── Plan 1: lowest single grade that meets the bar ──
+  const singleGrade = nearestGradeAbove(required);
+  if (singleGrade) {
+    const pts = POLYU_GRADES[singleGrade];
+    const exact = Math.abs(pts - required) < 0.01;
+    plans.push({
+      type: 'single',
+      desc: exact
+        ? `Score every remaining credit at ${singleGrade} (${pts.toFixed(1)}).`
+        : `Score every remaining credit at ${singleGrade} (${pts.toFixed(1)}) or higher.`,
+    });
+  }
+
+  // ── Plans 2-3: two-grade mixes that bracket the required value ──
+  // Prefer "nice" wide pairs (A/B, A-/B-, B+/C+) and clean credit splits.
+  const niceWidePairs = [
+    ['A+', 'B'], ['A', 'B'], ['A', 'C+'], ['A-', 'B-'], ['B+', 'C+'], ['B', 'C'],
+  ];
+  for (const [hi, lo] of niceWidePairs) {
+    if (plans.length >= 3) break;
+    const hiPts = POLYU_GRADES[hi];
+    const loPts = POLYU_GRADES[lo];
+    if (!(loPts < required && required < hiPts)) continue;
+    // hiCredits / remaining = (required - loPts) / (hiPts - loPts)
+    const ratio = (required - loPts) / (hiPts - loPts);
+    const hiCredits = Math.round(remaining * ratio);
+    const loCredits = remaining - hiCredits;
+    if (hiCredits <= 0 || loCredits <= 0) continue;
+    plans.push({
+      type: 'mix',
+      desc: `${hiCredits} credits at ${hi} + ${loCredits} credits at ${lo}.`,
+    });
+  }
+
+  return plans.slice(0, 3);
+}

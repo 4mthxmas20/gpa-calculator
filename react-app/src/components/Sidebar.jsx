@@ -63,6 +63,7 @@ export default function Sidebar({ onNavigate }) {
           { id: 'editor', label: 'Course Editor', icon: '📝' },
           { id: 'compare', label: 'Compare Majors', icon: '⚖️' },
           { id: 'wes', label: 'WES Conversion', icon: '🇺🇸' },
+          { id: 'target', label: 'Target GPA', icon: '🎯' },
         ].map(({ id, label, icon }) => (
           <button
             key={id}
