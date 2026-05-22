@@ -62,7 +62,6 @@ export default function Sidebar({ onNavigate }) {
         {[
           { id: 'editor', label: 'Course Editor' },
           { id: 'compare', label: 'Compare Majors' },
-          { id: 'wes', label: 'WES Conversion' },
           { id: 'target', label: 'Target GPA' },
         ].map(({ id, label }) => (
           <button
@@ -100,7 +99,7 @@ export default function Sidebar({ onNavigate }) {
                   </div>
                 ) : (
                   <button
-                    onClick={() => navigate(() => { setActiveProject(p.id); if (view === 'compare' || view === 'wes') return; setView('editor'); })}
+                    onClick={() => navigate(() => { setActiveProject(p.id); if (view === 'compare') return; setView('editor'); })}
                     className={`w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors ${
                       activeProjectId === p.id
                         ? 'bg-slate-100'

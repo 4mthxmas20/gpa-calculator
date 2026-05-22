@@ -3,11 +3,10 @@ import useStore from './store/useStore';
 import Sidebar from './components/Sidebar';
 import EditorView from './components/EditorView';
 import CompareView from './components/CompareView';
-import WESView from './components/WESView';
 import TargetView from './components/TargetView';
 import './index.css';
 
-const VIEW_LABELS = { editor: 'Editor', compare: 'Compare', wes: 'WES', target: 'Target' };
+const VIEW_LABELS = { editor: 'Editor', compare: 'Compare', target: 'Target' };
 
 export default function App() {
   const { view, setView } = useStore();
@@ -77,7 +76,6 @@ export default function App() {
         <main className="flex-1 overflow-y-auto flex flex-col">
           {view === 'editor'  && <EditorView />}
           {view === 'compare' && <CompareView />}
-          {view === 'wes'     && <WESView />}
           {view === 'target'  && <TargetView />}
         </main>
       </div>
