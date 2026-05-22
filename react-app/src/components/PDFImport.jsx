@@ -129,7 +129,6 @@ export default function PDFImport({ project, semesterId, onClose }) {
                     : 'border-slate-300 hover:border-red-400 hover:bg-slate-50'
                 }`}
               >
-                <div className="text-5xl mb-3 select-none">📄</div>
                 <div className="font-semibold text-slate-700 text-base">Drop your transcript PDF here</div>
                 <div className="text-sm text-slate-400 mt-1">or tap to browse files</div>
                 <div className="text-xs text-slate-300 mt-4">Works with PolyU e-transcripts and other text-based PDFs</div>
@@ -143,13 +142,13 @@ export default function PDFImport({ project, semesterId, onClose }) {
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 flex gap-2">
-                  <span>⚠️</span><span>{error}</span>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+                  {error}
                 </div>
               )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-700 leading-relaxed">
-                <b>💡 Tips:</b> Works best with <b>text-based PDFs</b> — official e-transcripts you can select &amp; copy text from.
+                <b>Tips:</b> Works best with <b>text-based PDFs</b> — official e-transcripts you can select &amp; copy text from.
                 Scanned image PDFs won't work. After parsing you can review and edit each course before importing.
               </div>
             </div>
@@ -235,7 +234,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
               </div>
 
               <p className="text-xs text-slate-400">
-                ✏️ You can edit any field before importing. Deselect rows you don't want.
+                You can edit any field before importing. Deselect rows you don't want.
               </p>
             </div>
           )}
@@ -243,8 +242,8 @@ export default function PDFImport({ project, semesterId, onClose }) {
           {/* ── Step 3: Done ── */}
           {step === STEPS.done && (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
-              <div className="text-6xl animate-bounce">✅</div>
-              <div className="font-bold text-slate-800 text-xl">Imported Successfully!</div>
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-2xl">Done</div>
+              <div className="font-bold text-slate-800 text-xl">Imported Successfully</div>
               <div className="text-slate-500 text-sm">{selected.size} courses added to <b>{semName}</b></div>
             </div>
           )}

@@ -17,8 +17,16 @@ function MiniBar({ value, max, color }) {
 }
 
 function RankBadge({ rank }) {
-  const labels = ['🥇', '🥈', '🥉'];
-  return rank < 3 ? <span className="text-lg">{labels[rank]}</span> : <span className="text-sm font-bold text-slate-400">#{rank + 1}</span>;
+  const isTop = rank < 3;
+  const palette = ['#a6192e', '#475569', '#92400e'];
+  return (
+    <span
+      className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold ${isTop ? 'text-white' : 'bg-slate-100 text-slate-500'}`}
+      style={isTop ? { background: palette[rank] } : {}}
+    >
+      #{rank + 1}
+    </span>
+  );
 }
 
 export default function CompareView() {
@@ -148,7 +156,7 @@ export default function CompareView() {
                             ) : (
                               <span className={`tabular-nums ${row.bold ? 'font-bold text-base' : 'font-medium'} ${isBest ? 'text-green-600' : 'text-slate-700'}`}>
                                 {row.fmt(val)}
-                                {isBest && row.bold && <span className="text-xs ml-1">★</span>}
+                                {isBest && row.bold && <span className="text-[10px] ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-700 font-bold uppercase tracking-wider">Best</span>}
                               </span>
                             )}
                           </td>

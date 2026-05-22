@@ -7,7 +7,7 @@ import WESView from './components/WESView';
 import TargetView from './components/TargetView';
 import './index.css';
 
-const VIEW_LABELS = { editor: '📝 Editor', compare: '⚖️ Compare', wes: '🇺🇸 WES', target: '🎯 Target' };
+const VIEW_LABELS = { editor: 'Editor', compare: 'Compare', wes: 'WES', target: 'Target' };
 
 export default function App() {
   const { view, setView } = useStore();

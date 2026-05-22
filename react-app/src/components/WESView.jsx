@@ -56,7 +56,7 @@ function ProjectWESCard({ project }) {
             const diff = wesGPA - school.minWES;
             return (
               <div key={school.name} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${ok ? 'bg-green-50' : 'bg-red-50'}`}>
-                <span className={`text-base ${ok ? 'text-green-600' : 'text-red-400'}`}>{ok ? '✓' : '✗'}</span>
+                <span className={`text-xs font-bold uppercase tracking-wide w-10 ${ok ? 'text-green-600' : 'text-red-500'}`}>{ok ? 'Pass' : 'No'}</span>
                 <span className={`flex-1 font-medium ${ok ? 'text-green-800' : 'text-red-700'}`}>{school.name}</span>
                 <span className={`text-xs ${ok ? 'text-green-600' : 'text-red-500'}`}>
                   {ok ? `+${diff.toFixed(2)}` : diff.toFixed(2)}

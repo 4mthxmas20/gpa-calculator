@@ -145,7 +145,7 @@ export default function TargetView() {
           {errors.length > 0 && (
             <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex flex-col gap-1">
               {errors.map((e, i) => (
-                <div key={i} className="text-sm text-red-700">⚠ {e}</div>
+                <div key={i} className="text-sm text-red-700">{e}</div>
               ))}
             </div>
           )}
@@ -170,7 +170,7 @@ export default function TargetView() {
                   className="text-5xl font-bold tabular-nums my-1"
                   style={{ color: tier?.color || '#0f172a' }}
                 >
-                  {required > 4.3 ? '> 4.30' : required <= 0 ? '✓' : required.toFixed(2)}
+                  {required > 4.3 ? '> 4.30' : required <= 0 ? 'Done' : required.toFixed(2)}
                 </div>
                 {letter && (
                   <div className="text-sm text-slate-500">
@@ -182,11 +182,10 @@ export default function TargetView() {
               {/* Feasibility badge */}
               {tier && (
                 <div
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl"
+                  className="px-4 py-3 rounded-xl font-bold"
                   style={{ background: `${tier.color}15`, color: tier.color }}
                 >
-                  <span className="text-xl">{tier.icon}</span>
-                  <span className="font-bold">{tier.label}</span>
+                  {tier.label}
                 </div>
               )}
 

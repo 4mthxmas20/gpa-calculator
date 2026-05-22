@@ -107,13 +107,13 @@ export function calcRequiredGPA({ totalCredits, completedCredits, currentGPA, ta
 // Feasibility tier on PolyU 4.3 scale
 export function feasibilityTier(required) {
   if (required === null || Number.isNaN(required)) return null;
-  if (required <= 0)   return { label: 'Already Achieved', color: '#16a34a', icon: '✅' };
-  if (required <= 2.0) return { label: 'Easy',             color: '#16a34a', icon: '😎' };
-  if (required <= 3.0) return { label: 'Moderate',         color: '#2563eb', icon: '🙂' };
-  if (required <= 3.5) return { label: 'Challenging',      color: '#d97706', icon: '😐' };
-  if (required <= 4.0) return { label: 'Very Hard',        color: '#dc2626', icon: '😬' };
-  if (required <= 4.3) return { label: 'Extreme',          color: '#7f1d1d', icon: '🔥' };
-  return                       { label: 'Impossible',      color: '#000000', icon: '❌' };
+  if (required <= 0)   return { label: 'Already Achieved', color: '#16a34a' };
+  if (required <= 2.0) return { label: 'Easy',             color: '#16a34a' };
+  if (required <= 3.0) return { label: 'Moderate',         color: '#2563eb' };
+  if (required <= 3.5) return { label: 'Challenging',      color: '#d97706' };
+  if (required <= 4.0) return { label: 'Very Hard',        color: '#dc2626' };
+  if (required <= 4.3) return { label: 'Extreme',          color: '#7f1d1d' };
+  return                       { label: 'Impossible',      color: '#000000' };
 }
 
 // Closest letter grade ≥ required (or 'F' floor when required <= 0)

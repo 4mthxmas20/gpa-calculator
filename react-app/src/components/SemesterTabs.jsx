@@ -33,7 +33,7 @@ export default function SemesterTabs({ project }) {
                 onChange={e => setEditName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') handleRename(sem.id); if (e.key === 'Escape') setEditingId(null); }}
               />
-              <button onClick={() => handleRename(sem.id)} className="px-2 py-1 bg-green-500 text-white text-xs rounded-lg">✓</button>
+              <button onClick={() => handleRename(sem.id)} className="px-2 py-1 bg-green-500 text-white text-xs rounded-lg">OK</button>
             </div>
           ) : (
             <button
@@ -54,13 +54,13 @@ export default function SemesterTabs({ project }) {
             <div className="absolute -top-1 -right-1 hidden group-hover:flex gap-0.5 z-10">
               <button
                 onClick={(e) => { e.stopPropagation(); setEditingId(sem.id); setEditName(sem.name); }}
-                className="w-4 h-4 bg-white border border-slate-300 rounded text-slate-500 hover:text-slate-800 text-xs flex items-center justify-center shadow-sm"
-              >✏</button>
+                className="px-1 h-4 bg-white border border-slate-300 rounded text-slate-500 hover:text-slate-800 text-[10px] font-semibold flex items-center justify-center shadow-sm"
+              >Edit</button>
               {project.semesters.length > 1 && (
                 <button
                   onClick={(e) => { e.stopPropagation(); if (confirm(`Delete "${sem.name}"?`)) deleteSemester(project.id, sem.id); }}
                   className="w-4 h-4 bg-white border border-slate-300 rounded text-slate-400 hover:text-red-500 text-xs flex items-center justify-center shadow-sm"
-                >✕</button>
+                >×</button>
               )}
             </div>
           )}
@@ -78,7 +78,7 @@ export default function SemesterTabs({ project }) {
             onKeyDown={e => { if (e.key === 'Enter') handleAdd(); if (e.key === 'Escape') setAdding(false); }}
           />
           <button onClick={handleAdd} className="px-2 py-1 bg-slate-800 text-white text-xs rounded-lg">Add</button>
-          <button onClick={() => setAdding(false)} className="px-2 py-1 bg-slate-200 text-slate-600 text-xs rounded-lg">✕</button>
+          <button onClick={() => setAdding(false)} className="px-2 py-1 bg-slate-200 text-slate-600 text-xs rounded-lg">×</button>
         </div>
       ) : (
         <button

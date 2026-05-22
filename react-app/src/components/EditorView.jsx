@@ -32,11 +32,10 @@ export default function EditorView() {
           </div>
           <button
             onClick={() => setShowPDF(true)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs md:text-sm font-semibold rounded-xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-red-400 hover:text-red-700 hover:bg-red-50 transition-all"
+            className="flex-shrink-0 px-3 py-1.5 text-xs md:text-sm font-semibold rounded-xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-red-400 hover:text-red-700 hover:bg-red-50 transition-all"
           >
-            <span>📄</span>
             <span className="hidden sm:inline">Import PDF Transcript</span>
-            <span className="sm:hidden">PDF</span>
+            <span className="sm:hidden">Import PDF</span>
           </button>
         </div>
 

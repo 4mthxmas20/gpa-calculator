@@ -60,21 +60,20 @@ export default function Sidebar({ onNavigate }) {
       {/* Nav */}
       <nav className="px-3 py-3 border-b border-slate-200 flex flex-col gap-1">
         {[
-          { id: 'editor', label: 'Course Editor', icon: '📝' },
-          { id: 'compare', label: 'Compare Majors', icon: '⚖️' },
-          { id: 'wes', label: 'WES Conversion', icon: '🇺🇸' },
-          { id: 'target', label: 'Target GPA', icon: '🎯' },
-        ].map(({ id, label, icon }) => (
+          { id: 'editor', label: 'Course Editor' },
+          { id: 'compare', label: 'Compare Majors' },
+          { id: 'wes', label: 'WES Conversion' },
+          { id: 'target', label: 'Target GPA' },
+        ].map(({ id, label }) => (
           <button
             key={id}
             onClick={() => navigate(() => setView(id))}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
               view === id
                 ? 'bg-red-50 text-red-700'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <span>{icon}</span>
             {label}
           </button>
         ))}
@@ -97,7 +96,7 @@ export default function Sidebar({ onNavigate }) {
                       onChange={e => setEditName(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') handleRename(p.id); if (e.key === 'Escape') setEditingId(null); }}
                     />
-                    <button onClick={() => handleRename(p.id)} className="px-2 py-1 bg-green-500 text-white text-xs rounded-lg">✓</button>
+                    <button onClick={() => handleRename(p.id)} className="px-2 py-1 bg-green-500 text-white text-xs rounded-lg">OK</button>
                   </div>
                 ) : (
                   <button
@@ -115,25 +114,25 @@ export default function Sidebar({ onNavigate }) {
                 )}
 
                 {/* Context buttons */}
-                <div className="absolute right-1 top-1/2 -translate-y-1/2 hidden group-hover:flex gap-0.5">
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 hidden group-hover:flex gap-1 bg-white/95 px-1 rounded-md">
                   {editingId !== p.id && (
                     <>
                       <button
                         onClick={(e) => { e.stopPropagation(); setShowColorPicker(showColorPicker === p.id ? null : p.id); }}
-                        className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-slate-600 text-xs"
+                        className="text-[10px] font-semibold text-slate-400 hover:text-slate-700 uppercase tracking-wide"
                         title="Change color"
-                      >🎨</button>
+                      >Color</button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setEditingId(p.id); setEditName(p.name); }}
-                        className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-slate-600 text-xs"
+                        className="text-[10px] font-semibold text-slate-400 hover:text-slate-700 uppercase tracking-wide"
                         title="Rename"
-                      >✏️</button>
+                      >Edit</button>
                       {projects.length > 1 && (
                         <button
                           onClick={(e) => { e.stopPropagation(); if (confirm(`Delete "${p.name}"?`)) deleteProject(p.id); }}
-                          className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-red-500 text-xs"
+                          className="text-[10px] font-semibold text-slate-400 hover:text-red-600 uppercase tracking-wide"
                           title="Delete"
-                        >✕</button>
+                        >Del</button>
                       )}
                     </>
                   )}
@@ -183,16 +182,16 @@ export default function Sidebar({ onNavigate }) {
         </p>
         <button
           onClick={saveData}
-          className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-white rounded-xl transition-colors"
+          className="px-3 py-2.5 text-sm font-semibold text-white rounded-xl transition-colors"
           style={{ background: '#a6192e' }}
         >
-          <span>💾</span> Save Data
+          Save Data
         </button>
         <button
           onClick={handleLoad}
-          className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+          className="px-3 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
         >
-          <span>📂</span> Load Data
+          Load Data
         </button>
       </div>
     </aside>
