@@ -130,7 +130,7 @@ export function nearestGradeAbove(required) {
 // Returns array of { type: 'single' | 'mix', desc: string }
 export function gradePlanSuggestions(required, remaining) {
   if (required === null || Number.isNaN(required) || remaining <= 0) return [];
-  if (required <= 0) return [{ type: 'single', desc: 'Any grade works — target already locked in.' }];
+  if (required <= 0) return [{ type: 'single', desc: 'Any grade works, target already locked in.' }];
   if (required > 4.3) return [];
 
   const plans = [];

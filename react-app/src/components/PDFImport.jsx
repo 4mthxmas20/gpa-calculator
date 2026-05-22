@@ -148,7 +148,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
               )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-700 leading-relaxed">
-                <b>Tips:</b> Works best with <b>text-based PDFs</b> — official e-transcripts you can select &amp; copy text from.
+                <b>Tips:</b> Works best with <b>text-based PDFs</b>, official e-transcripts you can select &amp; copy text from.
                 Scanned image PDFs won't work. After parsing you can review and edit each course before importing.
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function PDFImport({ project, semesterId, onClose }) {
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div className="text-sm font-semibold text-slate-700">
-                  Found <span className="text-red-700 font-bold">{courses.length}</span> courses — select which to import
+                  Found <span className="text-red-700 font-bold">{courses.length}</span> courses, select which to import
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => setSelected(new Set(courses.map((_, i) => i)))}

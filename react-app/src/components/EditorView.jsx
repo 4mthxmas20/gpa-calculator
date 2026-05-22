@@ -47,14 +47,14 @@ export default function EditorView() {
           <CourseTable project={project} semester={activeSemester} />
         )}
 
-        {/* GPA Panel — mobile only (shows below table) */}
+        {/* GPA Panel, mobile only (shows below table) */}
         <div className="md:hidden">
           <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">Summary</div>
           <GPAPanel project={project} />
         </div>
       </div>
 
-      {/* ── Right panel — desktop only ── */}
+      {/* Right panel, desktop only */}
       <div className="hidden md:flex w-72 border-l border-slate-200 p-4 overflow-y-auto bg-slate-50/50 flex-col">
         <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">Summary</div>
         <GPAPanel project={project} />
