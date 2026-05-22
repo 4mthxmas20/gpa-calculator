@@ -6,12 +6,12 @@ It helps you:
 
 - track courses by semester
 - compare different major or study-plan options side by side
-- estimate WES GPA for US graduate applications
+- back-solve the average GPA your remaining credits need to hit a target
 - import transcript data from PDF files
 - save and reload your planning data manually
 
 Live site:
-[https://4mthxmas20.github.io/gpa-calculator/](https://4mthxmas20.github.io/gpa-calculator/)
+[https://gpa-calculator-psi-five.vercel.app/](https://gpa-calculator-psi-five.vercel.app/)
 
 ## Preview
 
@@ -32,6 +32,7 @@ Live site:
 - Organize courses by semester
 - Edit course name, credits, and grade manually
 - See semester totals and cumulative GPA instantly
+- WES 4.0 GPA shown alongside PolyU cGPA in the same summary panel
 
 ### 2. PolyU 4.3 GPA Summary
 
@@ -39,6 +40,7 @@ Live site:
 - Calculates GPA from weighted grade points and credits
 - Shows total credits and grade distribution
 - Highlights A/B/C/D-F ranges visually
+- Also surfaces a WES 4.0 equivalent (with `A+` capped at `4.0`) next to the cGPA
 
 Supported grades:
 
@@ -49,14 +51,16 @@ Supported grades:
 - Compare multiple plans in one place
 - Rank plans by PolyU GPA
 - View total credits, number of courses, and semester counts
+- WES GPA and admission outlook shown for each plan
 - Use side-by-side comparison to support major decisions
 
-### 4. WES Conversion
+### 4. Target GPA
 
-- Converts PolyU grades to a WES-style 4.0 GPA
-- Treats `A+` as `4.0`, matching the app's WES conversion logic
-- Shows a simple admission outlook label such as `Strong Applicant` or `Competitive`
-- Includes sample school-threshold comparisons for quick reference
+- Enter total credits required for graduation, completed credits, current GPA, and target GPA
+- The app back-solves the average GPA your remaining credits must earn
+- Feasibility is labelled (Easy, Moderate, Challenging, Very Hard, Extreme, Impossible, Already Achieved)
+- Suggests concrete grade plans, e.g. a single grade everyone hits or a two-grade mix like `30 credits at A + 20 credits at B`
+- Defaults pre-fill from your active major option (still fully editable)
 
 ### 5. PDF Transcript Import
 
@@ -81,9 +85,9 @@ Notes:
 
 ## Screens
 
-- `Course Editor`: build and edit semester-by-semester plans
-- `Compare Majors`: compare different options
-- `WES Conversion`: view WES GPA and admission-oriented summary
+- `Course Editor`: build and edit semester-by-semester plans (with cGPA + WES GPA summary)
+- `Compare Majors`: rank and compare different options side by side
+- `Target GPA`: back-solve what your remaining credits need to average
 
 The layout is responsive and supports both desktop and mobile navigation.
 
@@ -138,12 +142,12 @@ This runs the Vite production build in `react-app`.
 
 ## Deployment
 
-The project is configured for GitHub Pages deployment with:
+The project is deployed on Vercel from the `main` branch.
 
-- Vite `base` set to `/gpa-calculator/`
-- a GitHub Actions workflow in `.github/workflows/deploy.yml`
+- Vercel auto-detects the Vite framework when the project's Root Directory is set to `react-app`
+- `vite.config.js` switches its `base` to `/gpa-calculator/` only when building under GitHub Actions, so the same code can also be served from GitHub Pages without a separate config
 
-Pushes to `main` trigger a new Pages deployment.
+Pushes to `main` trigger an automatic Vercel deployment.
 
 ## Use Case
 
@@ -151,8 +155,12 @@ This project is especially useful for students who:
 
 - study under the PolyU 4.3 grading system
 - want to compare different major paths
-- need a quick WES-equivalent GPA estimate
+- need to back-solve what their remaining credits must average to hit a graduation target
 - want to import transcript data instead of entering everything manually
+
+## Disclaimer
+
+For reference only, please verify with official transcript.
 
 ## License
 
