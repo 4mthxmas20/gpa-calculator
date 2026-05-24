@@ -1,6 +1,8 @@
-import * as pdfjsLib from 'pdfjs-dist';
+// Use the legacy build so iOS Safari < 17.4 (which lacks Promise.withResolvers
+// and AbortSignal.any) can still parse PDFs.
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.min.mjs';
 // Import worker as a URL so Vite bundles it locally (no CDN dependency)
-import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import pdfjsWorkerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;
 
