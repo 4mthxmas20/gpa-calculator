@@ -18,6 +18,24 @@ export default function PDFImport({ project, semesterId, onClose }) {
     return file.type === 'application/pdf' || file.name?.toLowerCase().endsWith('.pdf');
   };
 
+  // Read a File into an ArrayBuffer. file.arrayBuffer() can be flaky on some
+  // mobile WebKit builds, so we fall back to FileReader if it throws.
+  const readFileAsArrayBuffer = (file) => new Promise((resolve, reject) => {
+    if (typeof file.arrayBuffer === 'function') {
+      file.arrayBuffer().then(resolve).catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('FileReader failed'));
+        reader.readAsArrayBuffer(file);
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error('FileReader failed'));
+      reader.readAsArrayBuffer(file);
+    }
+  });
+
   // ── File handling ─────────────────────────────────────────────────────────
   const processFile = useCallback(async (file) => {
     if (!isPDFFile(file)) {
@@ -26,9 +44,12 @@ export default function PDFImport({ project, semesterId, onClose }) {
     }
     setError('');
     setStep(STEPS.parsing);
+    let stage = 'read file';
     try {
-      const buffer = await file.arrayBuffer();
+      const buffer = await readFileAsArrayBuffer(file);
+      stage = 'parse PDF';
       const lines = await extractTextFromPDF(buffer);
+      stage = 'extract courses';
       const parsed = parseCourses(lines);
       if (!parsed.length) {
         setError('No courses detected. The PDF may be scanned (image-based) or in an unsupported format.');
@@ -39,7 +60,12 @@ export default function PDFImport({ project, semesterId, onClose }) {
       setSelected(new Set(parsed.map((_, i) => i)));
       setStep(STEPS.review);
     } catch (e) {
-      setError(`Failed to parse PDF: ${e.message}`);
+      const name = e?.name || 'Error';
+      const msg = e?.message || String(e);
+      // Surface enough detail to diagnose mobile-specific failures remotely.
+      setError(`Failed at "${stage}". ${name}: ${msg}`);
+      // Also log to console so iOS Safari Web Inspector picks up the full stack.
+      console.error('[PDFImport] stage=' + stage, e);
       setStep(STEPS.idle);
     }
   }, []);
