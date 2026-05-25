@@ -49,15 +49,15 @@ export default function CompareView() {
   return (
     <div className="p-6 flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Compare Major Options</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Compare Options</h1>
         <p className="text-slate-500 mt-1 text-sm">
-          Side-by-side comparison to help decide between major plans.
+          Side-by-side comparison for any decision that affects your GPA, like picking a major or whether to go on exchange.
         </p>
       </div>
 
       {data.length < 2 && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-700 text-sm">
-          Add at least 2 major options in the sidebar to compare.
+          Add at least 2 options in the sidebar to compare.
         </div>
       )}
 

@@ -5,7 +5,7 @@ A GPA planning tool built around the PolyU 4.3 grading scale.
 It helps you:
 
 - track courses by semester
-- compare different major or study-plan options side by side
+- compare different options side by side, e.g. majors, study plans, or whether to go on exchange
 - back-solve the average GPA your remaining credits need to hit a target
 - import transcript data from PDF files
 - save and reload your planning data manually
@@ -27,8 +27,8 @@ Live site:
 
 ### 1. Course Editor
 
-- Create multiple major options or study plans
-- Add, rename, recolor, and delete plans
+- Create multiple options to model different scenarios (majors, study plans, exchange semesters, etc.)
+- Add, rename, recolor, and delete options
 - Organize courses by semester
 - Edit course name, credits, and grade manually
 - See semester totals and cumulative GPA instantly
@@ -46,13 +46,13 @@ Supported grades:
 
 `A+ A A- B+ B B- C+ C C- D+ D F`
 
-### 3. Compare Major Options
+### 3. Compare Options
 
-- Compare multiple plans in one place
-- Rank plans by PolyU GPA
+- Compare multiple options in one place
+- Rank options by PolyU GPA
 - View total credits, number of courses, and semester counts
-- WES GPA and admission outlook shown for each plan
-- Use side-by-side comparison to support major decisions
+- WES GPA and admission outlook shown for each option
+- Use side-by-side comparison for any GPA-affecting decision, like choosing a major or whether to go on exchange
 
 ### 4. Target GPA
 
@@ -60,7 +60,7 @@ Supported grades:
 - The app back-solves the average GPA your remaining credits must earn
 - Feasibility is labelled (Easy, Moderate, Challenging, Very Hard, Extreme, Impossible, Already Achieved)
 - Suggests concrete grade plans, e.g. a single grade everyone hits or a two-grade mix like `30 credits at A + 20 credits at B`
-- Defaults pre-fill from your active major option (still fully editable)
+- Defaults pre-fill from your active option (still fully editable)
 
 ### 5. PDF Transcript Import
 
@@ -86,7 +86,7 @@ Notes:
 ## Screens
 
 - `Course Editor`: build and edit semester-by-semester plans (with cGPA + WES GPA summary)
-- `Compare Majors`: rank and compare different options side by side
+- `Compare Options`: rank and compare different options side by side
 - `Target GPA`: back-solve what your remaining credits need to average
 
 The layout is responsive and supports both desktop and mobile navigation.
@@ -154,7 +154,7 @@ Pushes to `main` trigger an automatic Vercel deployment.
 This project is especially useful for students who:
 
 - study under the PolyU 4.3 grading system
-- want to compare different major paths
+- want to compare different paths or scenarios (majors, exchange, electives)
 - need to back-solve what their remaining credits must average to hit a graduation target
 - want to import transcript data instead of entering everything manually
 

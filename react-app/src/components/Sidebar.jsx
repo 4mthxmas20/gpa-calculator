@@ -61,7 +61,7 @@ export default function Sidebar({ onNavigate }) {
       <nav className="px-3 py-3 border-b border-slate-200 flex flex-col gap-1">
         {[
           { id: 'editor', label: 'Course Editor' },
-          { id: 'compare', label: 'Compare Majors' },
+          { id: 'compare', label: 'Compare Options' },
           { id: 'target', label: 'Target GPA' },
         ].map(({ id, label }) => (
           <button
@@ -80,7 +80,7 @@ export default function Sidebar({ onNavigate }) {
 
       {/* Projects */}
       <div className="flex-1 overflow-y-auto px-3 py-3">
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Major Options</div>
+        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Options</div>
         <div className="flex flex-col gap-1">
           {projects.map(p => {
             const { gpa } = calcProjectGPA(p.semesters, POLYU_GRADES);
@@ -159,7 +159,7 @@ export default function Sidebar({ onNavigate }) {
         <div className="mt-3 flex gap-1">
           <input
             className="flex-1 px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-red-400"
-            placeholder="New major option..."
+            placeholder="New option..."
             value={newName}
             onChange={e => setNewName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleAdd()}

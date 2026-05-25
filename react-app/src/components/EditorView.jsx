@@ -12,7 +12,7 @@ export default function EditorView() {
 
   if (!project) return (
     <div className="flex-1 flex items-center justify-center text-slate-400 p-8 text-center">
-      Select or create a major option from the menu.
+      Select or create an option from the menu.
     </div>
   );
 

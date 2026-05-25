@@ -92,7 +92,7 @@ export default function TargetView() {
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Target GPA</h1>
         <p className="text-slate-500 mt-1 text-sm">
-          Tell us your graduation target and we’ll back-solve what your remaining credits need to average. Defaults pull from your active major.
+          Tell us your graduation target and we’ll back-solve what your remaining credits need to average. Defaults pull from your active option.
         </p>
       </div>
 
